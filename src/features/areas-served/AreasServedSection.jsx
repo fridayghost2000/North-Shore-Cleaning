@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { areasData } from './areasData';
 import { useApp } from '../../context/AppContext';
 
@@ -58,9 +59,18 @@ export default function AreasServedSection() {
           ))}
         </div>
 
-        <p className="text-xs text-slate-500 mt-4 italic">
-          *Don't see your specific North Shore town? We also service surrounding communities across Essex County and Greater Boston upon request.
-        </p>
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-100">
+          <p className="text-xs text-slate-500 italic">
+            *Don't see your specific North Shore town? We also service surrounding communities across Essex County and Greater Boston upon request.
+          </p>
+          <Link
+            to="/areas-served"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-vibrant hover:text-navy-deep transition-colors shrink-0"
+          >
+            <span>Explore All Municipal Details</span>
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+          </Link>
+        </div>
       </div>
     </section>
   );

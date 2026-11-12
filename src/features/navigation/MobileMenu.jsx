@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 
 export default function MobileMenu({ isOpen, onClose }) {
+  const navigate = useNavigate();
   const { setIsCouponsOpen, setIsEstimateModalOpen, setIsBookingModalOpen, setSelectedService, setSelectedIndustry } = useApp();
   const [openSubmenu, setOpenSubmenu] = useState(null);
 
@@ -13,10 +15,31 @@ export default function MobileMenu({ isOpen, onClose }) {
 
   const handleNavClick = (anchorId) => {
     onClose();
-    const element = document.getElementById(anchorId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(anchorId);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    } else {
+      const element = document.getElementById(anchorId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
+  };
+
+  const handleServiceClick = (slug) => {
+    onClose();
+    navigate(`/services/${slug}`);
+  };
+
+  const handleIndustryClick = (slug) => {
+    onClose();
+    navigate(`/industries/${slug}`);
   };
 
   return (
@@ -35,7 +58,7 @@ export default function MobileMenu({ isOpen, onClose }) {
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center"
+              className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center cursor-pointer"
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
@@ -54,10 +77,11 @@ export default function MobileMenu({ isOpen, onClose }) {
           <div className="flex flex-col gap-1 text-sm font-semibold text-slate-700">
             <button
               onClick={() => {
+                if (window.location.pathname !== '/') navigate('/');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 onClose();
               }}
-              className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors"
+              className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
             >
               Home
             </button>
@@ -66,7 +90,7 @@ export default function MobileMenu({ isOpen, onClose }) {
             <div>
               <button
                 onClick={() => toggleSubmenu('about')}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
               >
                 <span>About Us</span>
                 <span className={`material-symbols-outlined text-[18px] transition-transform ${openSubmenu === 'about' ? 'rotate-180' : ''}`}>
@@ -75,13 +99,31 @@ export default function MobileMenu({ isOpen, onClose }) {
               </button>
               {openSubmenu === 'about' && (
                 <div className="ml-4 pl-2 border-l-2 border-slate-200 flex flex-col gap-1 py-1">
-                  <button onClick={() => handleNavClick('about')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    About North Shore Clean
+                  <button
+                    onClick={() => {
+                      onClose();
+                      navigate('/about');
+                    }}
+                    className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer"
+                  >
+                    About Company & Jerry
                   </button>
-                  <button onClick={() => handleNavClick('testimonials')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Client Testimonials
+                  <button
+                    onClick={() => {
+                      onClose();
+                      navigate('/testimonials');
+                    }}
+                    className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer"
+                  >
+                    Client Testimonials (5-Star)
                   </button>
-                  <button onClick={() => handleNavClick('areas')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
+                  <button
+                    onClick={() => {
+                      onClose();
+                      navigate('/areas-served');
+                    }}
+                    className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer"
+                  >
                     Areas Served (Essex County)
                   </button>
                 </div>
@@ -92,7 +134,7 @@ export default function MobileMenu({ isOpen, onClose }) {
             <div>
               <button
                 onClick={() => toggleSubmenu('services')}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
               >
                 <span>Our Services</span>
                 <span className={`material-symbols-outlined text-[18px] transition-transform ${openSubmenu === 'services' ? 'rotate-180' : ''}`}>
@@ -101,34 +143,34 @@ export default function MobileMenu({ isOpen, onClose }) {
               </button>
               {openSubmenu === 'services' && (
                 <div className="ml-4 pl-2 border-l-2 border-slate-200 flex flex-col gap-1 py-1">
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs font-bold text-cyan-vibrant">
+                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs font-bold text-cyan-vibrant cursor-pointer">
                     View All Services Overview
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
+                  <button onClick={() => handleServiceClick('commercial-office-cleaning')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
                     Commercial Office Cleaning
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
+                  <button onClick={() => handleServiceClick('floor-stripping-and-waxing')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
                     Floor Stripping & Waxing
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Carpet & Upholstery Cleaning
+                  <button onClick={() => handleServiceClick('carpet-and-upholstery-cleaning')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Carpet & Upholstery Deep Cleaning
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Green Cleaning (Eco Certified)
+                  <button onClick={() => handleServiceClick('green-cleaning')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Green Cleaning (Eco-Friendly)
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Tile & Grout Extraction
+                  <button onClick={() => handleServiceClick('tile-and-grout-cleaning')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Tile & Grout Pressure Extraction
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Day Porter Services & Supplies
+                  <button onClick={() => handleServiceClick('day-porter-services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Day Porter Services & Restock
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    COVID-19 Disinfection
+                  <button onClick={() => handleServiceClick('covid-19-disinfectant-misting')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    COVID-19 Disinfectant Misting
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
+                  <button onClick={() => handleServiceClick('residential-estate-cleaning')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
                     Residential Estate Cleaning
                   </button>
-                  <button onClick={() => handleNavClick('services')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant font-semibold text-[#043F7B]">
+                  <button onClick={() => handleServiceClick('janitorial-products')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant font-semibold text-[#043F7B] cursor-pointer">
                     Janitorial Products
                   </button>
                 </div>
@@ -139,7 +181,7 @@ export default function MobileMenu({ isOpen, onClose }) {
             <div>
               <button
                 onClick={() => toggleSubmenu('industries')}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
               >
                 <span>Industries Served</span>
                 <span className={`material-symbols-outlined text-[18px] transition-transform ${openSubmenu === 'industries' ? 'rotate-180' : ''}`}>
@@ -148,78 +190,81 @@ export default function MobileMenu({ isOpen, onClose }) {
               </button>
               {openSubmenu === 'industries' && (
                 <div className="ml-4 pl-2 border-l-2 border-slate-200 flex flex-col gap-1 py-1">
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Commercial Offices & Executive Floors
+                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs font-bold text-cyan-vibrant cursor-pointer">
+                    View All Industries Overview
                   </button>
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Medical & Healthcare Clinics
+                  <button onClick={() => handleIndustryClick('commercial-office')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Commercial Office
                   </button>
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Dental Offices
+                  <button onClick={() => handleIndustryClick('medical-and-healthcare')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Medical & Healthcare
                   </button>
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Child Care & Early Education
+                  <button onClick={() => handleIndustryClick('dental-clinics')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Dental Clinics
                   </button>
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Schools, Campuses & Auditoriums
+                  <button onClick={() => handleIndustryClick('child-care-centers')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Child Care Centers
                   </button>
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Post-Construction Fine Cleaning
+                  <button onClick={() => handleIndustryClick('schools-and-education')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Schools & Education
                   </button>
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Industrial & Warehouse Logistics
+                  <button onClick={() => handleIndustryClick('post-construction-cleaning')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Post-Construction Clean
                   </button>
-                  <button onClick={() => handleNavClick('industries')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant">
-                    Non-Profit & Community Facilities
+                  <button onClick={() => handleIndustryClick('industrial-and-warehouses')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Industrial & Warehouses
+                  </button>
+                  <button onClick={() => handleIndustryClick('non-profit-facilities')} className="text-left px-2 py-1.5 text-xs text-slate-600 hover:text-cyan-vibrant cursor-pointer">
+                    Non-Profit Facilities
                   </button>
                 </div>
               )}
             </div>
 
+            {/* Direct Links */}
             <button
-              onClick={() => {
-                onClose();
-                handleNavClick('about');
-              }}
-              className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors"
+              onClick={() => handleNavClick('quote')}
+              className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
+            >
+              Get Free Estimate
+            </button>
+            <button
+              onClick={() => handleNavClick('about')}
+              className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
             >
               Careers
             </button>
-
             <button
-              onClick={() => handleNavClick('estimate')}
-              className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors"
+              onClick={() => handleNavClick('contact')}
+              className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
             >
               Contact Us
             </button>
           </div>
         </div>
 
-        {/* Bottom CTAs */}
-        <div className="pt-6 border-t border-slate-100 flex flex-col gap-2">
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-2 pt-4 border-t border-slate-100">
           <button
             onClick={() => {
-              setIsEstimateModalOpen(true);
               onClose();
+              setIsEstimateModalOpen(true);
             }}
-            className="w-full py-3 rounded-xl bg-cyan-vibrant text-white font-bold text-sm shadow-md hover:bg-cyan-bright transition-colors flex items-center justify-center gap-2"
+            className="w-full py-2.5 px-4 rounded-xl bg-cyan-vibrant hover:bg-cyan-bright text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[20px]">calculate</span>
-            Instant Estimate Calculator
+            Calculate Free Estimate
           </button>
           <button
             onClick={() => {
-              setIsBookingModalOpen(true);
               onClose();
+              setIsBookingModalOpen(true);
             }}
-            className="w-full py-3 rounded-xl bg-navy-mid text-white font-bold text-sm hover:bg-navy-deep transition-colors flex items-center justify-center gap-2"
+            className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-navy-deep text-xs font-bold transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[20px] text-secondary-container">calendar_month</span>
-            Book Day 1 Walkthrough
+            Schedule Day 1 Walkthrough
           </button>
         </div>
       </div>
     </div>
   );
 }
-

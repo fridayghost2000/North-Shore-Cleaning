@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import SectionHeading from '../../components/SectionHeading';
 import TestimonialSlider from './TestimonialSlider';
 import { useApp } from '../../context/AppContext';
@@ -24,6 +25,18 @@ export default function TestimonialsGrid() {
         {/* Interactive Testimonial Slider / Carousel */}
         <div className="mt-8">
           <TestimonialSlider />
+        </div>
+
+        {/* Link to Dedicated Testimonials Page */}
+        <div className="mt-8 flex justify-center">
+          <Link
+            to="/testimonials"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-border-subtle hover:border-cyan-vibrant text-navy-deep hover:text-cyan-vibrant font-bold text-xs sm:text-sm shadow-xs hover:shadow-md transition-all"
+          >
+            <span className="material-symbols-outlined text-[18px] text-amber-500">star</span>
+            <span>Read All Verified 5-Star Client Reviews</span>
+            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </Link>
         </div>
 
         {/* Authority Callout Banner from code.html */}

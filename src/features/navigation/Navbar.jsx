@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import MobileMenu from './MobileMenu';
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { setIsCouponsOpen, setIsEstimateModalOpen, setIsBookingModalOpen, showToast } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -15,25 +18,44 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+  const handleNavClick = (id) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        else window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  const handleServiceClick = (slug) => {
+    navigate(`/services/${slug}`);
+  };
+
+  const handleIndustryClick = (slug) => {
+    navigate(`/industries/${slug}`);
+  };
+
+  const isHome = location.pathname === '/';
+  const isAboutActive =
+    location.pathname.startsWith('/about') ||
+    location.pathname.startsWith('/testimonials') ||
+    location.pathname.startsWith('/areas-served');
 
   return (
     <>
       <header className={`sticky top-0 left-0 w-full z-40 transition-all duration-300 border-t-[3px] border-[#0099B9] ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-3' : 'bg-white shadow-[0_1px_6px_rgba(0,0,0,0.06)] py-3.5'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
-            {/* Brand Logo - Crisp, high visibility, generous navbar height preserved */}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+            {/* Brand Logo */}
+            <Link
+              to="/"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex items-center gap-3 text-left py-0.5 focus:outline-none"
             >
               <img
@@ -42,48 +64,58 @@ export default function Navbar() {
                 className="h-12 sm:h-13 md:h-14 w-auto max-w-[260px] sm:max-w-[300px] object-contain block shrink-0"
                 style={{ imageRendering: '-webkit-optimize-contrast' }}
               />
-            </a>
+            </Link>
 
-            {/* Desktop Navigation - Refined slightly smaller text size (text-[13px]) */}
+            {/* Desktop Navigation */}
             <nav className="hidden xl:flex items-center gap-6 text-[13px] font-semibold text-slate-700">
-              {/* Home with active blue indicator line */}
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="text-[#0099B9] font-bold border-b-2 border-[#0099B9] pb-0.5 hover:text-[#043F7B] transition-colors"
+              {/* Home */}
+              <Link
+                to="/"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className={`${isHome ? 'text-[#0099B9] font-bold border-b-2 border-[#0099B9] pb-0.5' : 'hover:text-[#043F7B]'} transition-colors`}
               >
                 Home
-              </a>
+              </Link>
 
               {/* About Us Dropdown */}
               <div className="relative group py-1.5">
                 <button
                   type="button"
-                  className="flex items-center gap-0.5 hover:text-[#043F7B] transition-colors focus:outline-none cursor-pointer"
+                  onClick={() => navigate('/about')}
+                  className={`flex items-center gap-0.5 ${isAboutActive ? 'text-[#0099B9] font-bold' : 'hover:text-[#043F7B]'} transition-colors focus:outline-none cursor-pointer`}
                 >
                   About Us
                   <span className="material-symbols-outlined text-[15px] text-slate-500 group-hover:text-[#043F7B] transition-colors">expand_more</span>
                 </button>
-                <div className="absolute left-0 top-full pt-2 hidden group-hover:block w-60 z-50">
-                  <div className="bg-white rounded-xl shadow-xl border border-slate-100 p-2 flex flex-col gap-1">
+                <div className="absolute left-0 top-full pt-2 hidden group-hover:block w-64 z-50">
+                  <div className="bg-white rounded-xl shadow-xl border border-slate-100 p-2.5 flex flex-col gap-1">
                     <button
-                      onClick={() => scrollTo('about')}
-                      className="text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs font-semibold cursor-pointer"
+                      onClick={() => navigate('/about')}
+                      className={`text-left px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                        location.pathname.startsWith('/about')
+                          ? 'bg-[#0099B9]/10 text-[#0099B9] font-bold'
+                          : 'text-slate-700 hover:bg-slate-50 hover:text-[#0099B9]'
+                      }`}
                     >
                       About Company & Jerry
                     </button>
                     <button
-                      onClick={() => scrollTo('testimonials')}
-                      className="text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs font-semibold cursor-pointer"
+                      onClick={() => navigate('/testimonials')}
+                      className={`text-left px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                        location.pathname.startsWith('/testimonials')
+                          ? 'bg-[#0099B9]/10 text-[#0099B9] font-bold'
+                          : 'text-slate-700 hover:bg-slate-50 hover:text-[#0099B9]'
+                      }`}
                     >
                       Client Testimonials (5-Star)
                     </button>
                     <button
-                      onClick={() => scrollTo('areas')}
-                      className="text-left px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs font-semibold cursor-pointer"
+                      onClick={() => navigate('/areas-served')}
+                      className={`text-left px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                        location.pathname.startsWith('/areas-served')
+                          ? 'bg-[#0099B9]/10 text-[#0099B9] font-bold'
+                          : 'text-slate-700 hover:bg-slate-50 hover:text-[#0099B9]'
+                      }`}
                     >
                       Areas Served (Essex County)
                     </button>
@@ -95,8 +127,8 @@ export default function Navbar() {
               <div className="relative group py-1.5">
                 <button
                   type="button"
-                  onClick={() => scrollTo('services')}
-                  className="flex items-center gap-0.5 hover:text-[#043F7B] transition-colors focus:outline-none cursor-pointer"
+                  onClick={() => handleNavClick('services')}
+                  className={`flex items-center gap-0.5 ${location.pathname.startsWith('/services') ? 'text-[#0099B9] font-bold' : 'hover:text-[#043F7B]'} transition-colors focus:outline-none cursor-pointer`}
                 >
                   Our Services
                   <span className="material-symbols-outlined text-[15px] text-slate-500 group-hover:text-[#043F7B] transition-colors">expand_more</span>
@@ -104,61 +136,61 @@ export default function Navbar() {
                 <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 hidden group-hover:block w-72 z-50">
                   <div className="bg-white rounded-xl shadow-xl border border-slate-100 p-2.5 flex flex-col gap-1">
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleNavClick('services')}
                       className="text-left px-3 py-2 rounded-lg bg-[#0099B9]/10 text-[#0099B9] font-bold transition-colors text-xs cursor-pointer"
                     >
                       All Services Overview
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('commercial-office-cleaning')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Commercial Office Cleaning
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('floor-stripping-and-waxing')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Floor Stripping & Waxing
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('carpet-and-upholstery-cleaning')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Carpet & Upholstery Deep Cleaning
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('green-cleaning')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Green Cleaning (Eco-Friendly)
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('tile-and-grout-cleaning')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Tile & Grout Pressure Extraction
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('day-porter-services')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Day Porter Services & Restock
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('covid-19-disinfectant-misting')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       COVID-19 Disinfectant Misting
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('residential-estate-cleaning')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Residential Estate Cleaning
                     </button>
                     <button
-                      onClick={() => scrollTo('services')}
+                      onClick={() => handleServiceClick('janitorial-products')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer font-semibold text-[#043F7B]"
                     >
                       Janitorial Products
@@ -171,58 +203,64 @@ export default function Navbar() {
               <div className="relative group py-1.5">
                 <button
                   type="button"
-                  onClick={() => scrollTo('industries')}
-                  className="flex items-center gap-0.5 hover:text-[#043F7B] transition-colors focus:outline-none cursor-pointer"
+                  onClick={() => handleNavClick('industries')}
+                  className={`flex items-center gap-0.5 ${location.pathname.startsWith('/industries') ? 'text-[#0099B9] font-bold' : 'hover:text-[#043F7B]'} transition-colors focus:outline-none cursor-pointer`}
                 >
                   Industries Served
                   <span className="material-symbols-outlined text-[15px] text-slate-500 group-hover:text-[#043F7B] transition-colors">expand_more</span>
                 </button>
-                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 hidden group-hover:block w-64 z-50">
+                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 hidden group-hover:block w-72 z-50">
                   <div className="bg-white rounded-xl shadow-xl border border-slate-100 p-2.5 flex flex-col gap-1">
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleNavClick('industries')}
+                      className="text-left px-3 py-2 rounded-lg bg-[#0099B9]/10 text-[#0099B9] font-bold transition-colors text-xs cursor-pointer"
+                    >
+                      All Industries Overview
+                    </button>
+                    <button
+                      onClick={() => handleIndustryClick('commercial-office')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Commercial Office
                     </button>
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleIndustryClick('medical-and-healthcare')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Medical & Healthcare
                     </button>
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleIndustryClick('dental-clinics')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Dental Clinics
                     </button>
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleIndustryClick('child-care-centers')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Child Care Centers
                     </button>
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleIndustryClick('schools-and-education')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Schools & Education
                     </button>
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleIndustryClick('post-construction-cleaning')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Post-Construction Clean
                     </button>
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleIndustryClick('industrial-and-warehouses')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Industrial & Warehouses
                     </button>
                     <button
-                      onClick={() => scrollTo('industries')}
+                      onClick={() => handleIndustryClick('non-profit-facilities')}
                       className="text-left px-3 py-1.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-[#0099B9] transition-colors text-xs cursor-pointer"
                     >
                       Non-Profit Facilities
@@ -235,7 +273,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => {
-                  scrollTo('about');
+                  handleNavClick('about');
                   showToast('Careers: Call Jerry at 978-809-5533 or submit a message for janitorial openings!', 'info');
                 }}
                 className="hover:text-[#043F7B] transition-colors cursor-pointer"
@@ -246,14 +284,14 @@ export default function Navbar() {
               {/* Contact Us */}
               <button
                 type="button"
-                onClick={() => scrollTo('estimate')}
+                onClick={() => handleNavClick('estimate')}
                 className="hover:text-[#043F7B] transition-colors cursor-pointer"
               >
                 Contact Us
               </button>
             </nav>
 
-            {/* Right Action: Refined compact badge & profile button */}
+            {/* Right Action */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsEstimateModalOpen(true)}
@@ -263,7 +301,7 @@ export default function Navbar() {
                 Get Free Estimate
               </button>
 
-              {/* Circular User Profile Button */}
+              {/* User Profile Button */}
               <button
                 type="button"
                 onClick={() => {
@@ -275,7 +313,7 @@ export default function Navbar() {
                 <span className="material-symbols-outlined text-[15px]">person</span>
               </button>
 
-              {/* Mobile Menu Button for Small Screens */}
+              {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
                 className="xl:hidden p-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors focus:outline-none"
@@ -293,4 +331,3 @@ export default function Navbar() {
     </>
   );
 }
-

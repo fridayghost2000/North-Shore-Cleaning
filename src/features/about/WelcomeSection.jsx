@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 
 export default function WelcomeSection() {
+  const navigate = useNavigate();
   const { setIsBookingModalOpen } = useApp();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -89,13 +91,11 @@ export default function WelcomeSection() {
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3.5 pt-3">
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
+                onClick={() => navigate('/about')}
                 className="px-6 py-3 rounded-xl bg-cyan-vibrant text-white font-bold text-xs sm:text-sm hover:bg-cyan-bright transition-all shadow-sm flex items-center gap-2 cursor-pointer"
               >
-                {isExpanded ? 'Show Less' : 'Read More Details'}
-                <span className="material-symbols-outlined text-[18px]">
-                  {isExpanded ? 'expand_less' : 'arrow_forward'}
-                </span>
+                Read More Details
+                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
 
               <a
