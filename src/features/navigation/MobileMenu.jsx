@@ -229,7 +229,10 @@ export default function MobileMenu({ isOpen, onClose }) {
               Get Free Estimate
             </button>
             <button
-              onClick={() => handleNavClick('about')}
+              onClick={() => {
+                onClose();
+                navigate('/careers');
+              }}
               className="text-left px-3 py-2.5 rounded-lg hover:bg-slate-100 hover:text-cyan-vibrant transition-colors cursor-pointer"
             >
               Careers

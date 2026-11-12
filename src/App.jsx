@@ -7,9 +7,12 @@ import { WelcomeSection, AboutPage } from './features/about';
 import { ServicesGrid } from './features/services';
 import { IndustriesGrid, IndustryDetailPage } from './features/industries';
 import { TestimonialsGrid, TestimonialsPage } from './features/testimonials';
+import { FAQSection } from './features/faq';
 import { DualIntakeSection } from './features/estimate-calculator';
 import { AreasServedSection, AreasServedPage } from './features/areas-served';
 import { ServiceDetailPage } from './features/services';
+import { CareersPage } from './features/careers';
+import { TermsOfServicePage } from './features/legal';
 
 function HomePage() {
   return (
@@ -29,7 +32,10 @@ function HomePage() {
       {/* 5. Authentic Client Reviews & Authority Showcase */}
       <TestimonialsGrid />
 
-      {/* 6. Dual Intake: Free Estimate & Book Now Walkthrough */}
+      {/* 6. Frequently Asked Questions (FAQ) */}
+      <FAQSection />
+
+      {/* 7. Dual Intake: Free Estimate & Book Now Walkthrough */}
       <DualIntakeSection />
 
       {/* 7. Regional Footprint & Areas Served */}
@@ -51,6 +57,9 @@ export default function App() {
             <Route path="/about/testimonials" element={<TestimonialsPage />} />
             <Route path="/areas-served" element={<AreasServedPage />} />
             <Route path="/about/areas-served" element={<AreasServedPage />} />
+            <Route path="/careers" element={<CareersPage />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
             <Route path="/services" element={<HomePage />} />
             <Route path="/services/:serviceSlug" element={<ServiceDetailPage />} />
             <Route path="/industries" element={<HomePage />} />

@@ -270,16 +270,13 @@ export default function Navbar() {
               </div>
 
               {/* Careers */}
-              <button
-                type="button"
-                onClick={() => {
-                  handleNavClick('about');
-                  showToast('Careers: Call Jerry at 978-809-5533 or submit a message for janitorial openings!', 'info');
-                }}
-                className="hover:text-[#043F7B] transition-colors cursor-pointer"
+              <Link
+                to="/careers"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className={`${location.pathname === '/careers' ? 'text-[#0099B9] font-bold border-b-2 border-[#0099B9] pb-0.5' : 'hover:text-[#043F7B]'} transition-colors`}
               >
                 Careers
-              </button>
+              </Link>
 
               {/* Contact Us */}
               <button

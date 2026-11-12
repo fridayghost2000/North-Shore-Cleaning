@@ -113,6 +113,16 @@ export default function Footer() {
                 </button>
               </li>
               <li>
+                <button onClick={() => scrollTo('faq')} className="hover:text-secondary-container transition-colors text-left cursor-pointer">
+                  Frequently Asked Questions (FAQ)
+                </button>
+              </li>
+              <li>
+                <button onClick={() => navigate('/careers')} className="hover:text-secondary-container transition-colors text-left cursor-pointer">
+                  Careers & Job Openings
+                </button>
+              </li>
+              <li>
                 <button onClick={() => setIsEstimateModalOpen(true)} className="hover:text-secondary-container transition-colors text-left cursor-pointer">
                   Instant Estimate Tool
                 </button>
@@ -229,16 +239,16 @@ export default function Footer() {
             © {new Date().getFullYear()} North Shore Cleaning Systems, Inc. All rights reserved.
           </div>
           <div className="flex flex-wrap items-center gap-4">
-            <button onClick={() => scrollTo('about')} className="hover:text-slate-200 transition-colors">
+            <button onClick={() => navigate('/terms-of-service')} className="hover:text-cyan-300 transition-colors cursor-pointer">
               Terms of Custodial Service
             </button>
             <span>•</span>
-            <button onClick={() => scrollTo('about')} className="hover:text-slate-200 transition-colors">
-              Privacy Protocol
+            <button onClick={() => navigate('/terms-of-service#si')} className="hover:text-cyan-300 transition-colors cursor-pointer">
+              Safety Information & Standards (#si)
             </button>
             <span>•</span>
-            <button onClick={() => scrollTo('about')} className="hover:text-slate-200 transition-colors">
-              OSHA Safety Standard
+            <button onClick={() => navigate('/terms-of-service#security')} className="hover:text-cyan-300 transition-colors cursor-pointer">
+              Privacy & Facility Security
             </button>
           </div>
         </div>
